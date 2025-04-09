@@ -147,7 +147,7 @@ int main(int argc, char* argv[]) {
         currentHour = localTime->tm_hour;
         currentMinute = localTime->tm_min;
 
-        if (currentMinute == previousMinute) {
+        if (currentMinute != previousMinute) {
             previousMinute = currentMinute;
 
             std::string targetText = (currentHour < 10 ? "0" : "") + std::to_string(currentHour) +
