@@ -1,0 +1,264 @@
+[
+    {
+        "id": "e68cfb6d1c7d974d",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "73830e41885ef6d5",
+        "type": "http in",
+        "z": "e68cfb6d1c7d974d",
+        "name": "",
+        "url": "dht-data",
+        "method": "post",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 100,
+        "y": 220,
+        "wires": [
+            [
+                "30df43b0bb34e3b1",
+                "b38066045ab06098",
+                "7892e63c1bca6526",
+                "58e99eb5273e0f64"
+            ]
+        ]
+    },
+    {
+        "id": "b38066045ab06098",
+        "type": "http response",
+        "z": "e68cfb6d1c7d974d",
+        "name": "",
+        "statusCode": "200",
+        "headers": {},
+        "x": 340,
+        "y": 220,
+        "wires": []
+    },
+    {
+        "id": "30df43b0bb34e3b1",
+        "type": "debug",
+        "z": "e68cfb6d1c7d974d",
+        "name": "debug 1",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 340,
+        "y": 60,
+        "wires": []
+    },
+    {
+        "id": "c1df11dff68ba607",
+        "type": "debug",
+        "z": "e68cfb6d1c7d974d",
+        "name": "debug 2",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 400,
+        "y": 480,
+        "wires": []
+    },
+    {
+        "id": "58e99eb5273e0f64",
+        "type": "function",
+        "z": "e68cfb6d1c7d974d",
+        "name": "function 1",
+        "func": "msg.payload = msg.payload.humidity\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 340,
+        "y": 420,
+        "wires": [
+            [
+                "10ac245fcae12aca"
+            ]
+        ]
+    },
+    {
+        "id": "7892e63c1bca6526",
+        "type": "function",
+        "z": "e68cfb6d1c7d974d",
+        "name": "function 2",
+        "func": "msg.payload = msg.payload.temperature\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 340,
+        "y": 320,
+        "wires": [
+            [
+                "d6e2b53808a21b84",
+                "791a2c10a2ddc9aa"
+            ]
+        ]
+    },
+    {
+        "id": "d6e2b53808a21b84",
+        "type": "ui_gauge",
+        "z": "e68cfb6d1c7d974d",
+        "name": "",
+        "group": "730175e2c3351f24",
+        "order": 0,
+        "width": 0,
+        "height": 0,
+        "gtype": "gage",
+        "title": "Temperature",
+        "label": "°C",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "40",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "diff": false,
+        "className": "",
+        "x": 630,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "10ac245fcae12aca",
+        "type": "ui_gauge",
+        "z": "e68cfb6d1c7d974d",
+        "name": "",
+        "group": "730175e2c3351f24",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "gtype": "gage",
+        "title": "Humidity",
+        "label": "%",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "100",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "diff": false,
+        "className": "",
+        "x": 620,
+        "y": 420,
+        "wires": []
+    },
+    {
+        "id": "c49d8cb923c034f8",
+        "type": "ui_switch",
+        "z": "e68cfb6d1c7d974d",
+        "name": "",
+        "label": "switch",
+        "tooltip": "",
+        "group": "730175e2c3351f24",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "decouple": "false",
+        "topic": "topic",
+        "topicType": "msg",
+        "style": "",
+        "onvalue": "OFF",
+        "onvalueType": "str",
+        "onicon": "",
+        "oncolor": "",
+        "offvalue": "ON",
+        "offvalueType": "str",
+        "officon": "",
+        "offcolor": "",
+        "animate": false,
+        "className": "",
+        "x": 110,
+        "y": 580,
+        "wires": [
+            [
+                "c1df11dff68ba607",
+                "81945bf6e2b3f7e2"
+            ]
+        ]
+    },
+    {
+        "id": "81945bf6e2b3f7e2",
+        "type": "http request",
+        "z": "e68cfb6d1c7d974d",
+        "name": "",
+        "method": "POST",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "http://172.20.10.2/control-led",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 550,
+        "y": 640,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "791a2c10a2ddc9aa",
+        "type": "debug",
+        "z": "e68cfb6d1c7d974d",
+        "name": "debug 3",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 540,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "730175e2c3351f24",
+        "type": "ui_group",
+        "name": "Measure",
+        "tab": "d09628f6b4f83ba2",
+        "order": 1,
+        "disp": true,
+        "width": "6",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "d09628f6b4f83ba2",
+        "type": "ui_tab",
+        "name": "Home",
+        "icon": "dashboard",
+        "disabled": false,
+        "hidden": false
+    }
+]

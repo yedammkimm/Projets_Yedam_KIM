@@ -1,0 +1,28 @@
+{% macro socketGame(prefix) %}
+<script type="text/javascript">
+    /* function run by Game.html and Player.html */
+    function updateWebSocket(){
+        /* when received update about a Game, just display it */
+        socket.on('update{{ GameName }}', function (msg) {
+            var data = JSON.parse(msg);
+            for (let el in data) {
+                if (data.hasOwnProperty(el))
+                    document.getElementById('{{prefix}}' + el).innerHTML = data[el];
+            }
+        });
+    }
+    /* register to endOfGame and display it when received*/
+    function displayEndOfGame(){
+        socket.on('endOfGame', function(msg){
+            document.getElementById('endOfGame').innerHTML = msg;
+        });
+    }
+</script>
+{% endmacro %}
+
+{% macro styleGame() %}
+{% endmacro %}
+
+{% macro contentGame() %}
+  <div id="game_content"></div>
+{% endmacro %}

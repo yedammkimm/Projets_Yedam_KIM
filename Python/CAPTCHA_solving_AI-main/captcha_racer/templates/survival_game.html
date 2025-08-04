@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/styles.css">
+    <title>Survival - Captcha Racer</title>
+</head>
+<body>
+    <header>
+        <h1>Survival Mode</h1>
+        <nav>
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="/solo">Solo Mode</a></li>
+                <!-- <li><a href="/multiplayer">Multiplayer</a></li> -->
+                <li><a href="/vs-ai">Versus AI</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <div id="game-area">
+            <h2>Survival Mode</h2>
+
+            <p>Difficulty: {{ difficulty.capitalize() }}</p>
+
+            <div id="lives">
+                {% set total_lives = session['remaining_lives'] %}
+                {% for i in range(total_lives) %}
+                    <div class="life" data-index="{{ i }}">
+                        <img src="/static/images/heart-green.png" alt="Green Heart" class="heart">
+                    </div>
+                {% endfor %}
+            </div>
+
+            <p>Score: <span id="score">{{ session['score'] }}</span></p>
+
+            <p>PROVE YOU ARE A FUCKING HUMAN OKAY?</p>
+            <div>
+                <img id="captcha-image" src="{{ url_for('captcha_solo') }}" alt="Captcha Image" />
+            </div>
+            
+            <form id="captcha-form">
+                <input type="text" name="captcha_input" required />
+                <button class="button" type="submit">Submit</button>
+            </form>
+            
+            <p id="feedback" style="color: #d8eee0;">{{ feedback }}</p>
+
+            <!-- Game over popup -->
+            <div id="game-over-popup" style="display: none;">
+                <h2>Game Over!</h2>
+                <p>You are a disgrace to humanity XD... even our AI is better than you</p>
+                <p>Your final score: <span id="final-score">{{ session['score'] }}</span></p>
+                <button class="button" onclick="window.location.href='/solo/survival'">Play Again</button>
+            </div>
+
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Captcha Racer. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // Initialize the necessary variables
+        let remainingLives = {{ session['remaining_lives'] }};
+        let score = {{ session['score'] }};
+        let captchaInputField = document.querySelector('input[name="captcha_input"]');
+        let feedbackElement = document.getElementById('feedback');
+        let livesContainer = document.getElementById('lives');
+        let captchaImage = document.getElementById('captcha-image');
+        let scoreElement = document.getElementById('score');
+        let gameOverPopup = document.getElementById('game-over-popup');
+        // Function to update lives
+        function updateLives() {
+            livesContainer.innerHTML = ''; // Clear existing hearts
+            for (let i = 0; i < remainingLives; i++) {
+                const life = document.createElement('div');
+                life.classList.add('life');
+                life.innerHTML = '<img src="/static/images/heart-green.png" alt="Green Heart" class="heart">';
+                livesContainer.appendChild(life);
+            }
+        }
+
+        // Function to handle game over
+        function handleGameOver() {
+            gameOverPopup.style.display = 'block';
+        }
+
+        // Handle form submission via AJAX
+        document.getElementById('captcha-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            let captchaInput = captchaInputField.value;
+            fetch('/verify', {
+                method: 'POST',
+                body: new URLSearchParams({ captcha_input: captchaInput })
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('feedback').textContent = data.feedback;
+                document.getElementById('score').textContent = data.score;
+
+                // Mise à jour de l'affichage des vies : total de vies (total_lives)
+                var livesContainer = document.getElementById('lives');
+                var totalLives = {{ session['total_lives'] }}; // Nombre total de vies (constant)
+                var remainingLives = data.remaining_lives;  // Nombre de vies restantes
+                livesContainer.innerHTML = ''; // Réinitialiser les vies
+
+                // Remplir les vies avec des cœurs verts ou rouges
+                for (let i = 0; i < totalLives; i++) {
+                    const life = document.createElement('div');
+                    life.classList.add('life');
+
+                    // Si le joueur a perdu une vie, on met un cœur rouge à la place du vert
+                    if (i < totalLives - remainingLives) {
+                        life.innerHTML = '<img src="/static/images/heart-red.png" alt="Red Heart" class="heart">';
+                    } else {
+                        life.innerHTML = '<img src="/static/images/heart-green.png" alt="Green Heart" class="heart">';
+                    }
+
+                    livesContainer.appendChild(life);
+                }
+
+                // Clear the input field
+                document.querySelector('input[name="captcha_input"]').value = '';
+
+                // Affichage de la popup de game over si nécessaire
+                if (data.game_over) {
+                    document.getElementById('game-over-popup').style.display = 'block';
+                    document.getElementById('final-score').textContent = data.score;
+                } else {
+                    // Mettre à jour l'image du CAPTCHA
+                    document.getElementById('captcha-image').src = data.captcha_image + '?t=' + new Date().getTime(); // Pour éviter le cache
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred while processing your request.');
+            });
+        });
+
+    </script>
+</body>
+</html>

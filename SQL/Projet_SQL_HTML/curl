@@ -1,0 +1,22 @@
+curl -X POST http://127.0.0.1:5000/factures -H "Content-Type: application/json" -d '{
+  "type_fac": "Électricité",
+  "montant": 150.75,
+  "logement_id": 1
+}'
+
+
+curl http://127.0.0.1:5000/factures
+
+curl http://127.0.0.1:5000/previsions_meteo
+
+
+curl -X PUT http://127.0.0.1:5000/factures/1 -H "Content-Type: application/json" -d '{
+  "type_fac": "Gaz",
+  "montant": 200.50,
+  "logement_id": 1
+}'
+
+
+curl -X DELETE http://127.0.0.1:5000/factures/1
+
+

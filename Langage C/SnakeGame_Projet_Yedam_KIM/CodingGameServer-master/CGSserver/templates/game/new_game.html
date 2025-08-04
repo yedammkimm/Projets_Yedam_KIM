@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block content %}
+    {% if nb_players > 1 %}
+    <form action="{{base_url}}create_new_game.html" method="POST">
+        <label>
+            Player 1:
+            <select name="player1">
+                {{list_players|safe}}
+            </select>
+        </label>
+        &nbsp;
+        <label>
+            Player2:
+            <select name="player2">
+                {{list_players|safe}}
+            </select>
+        </label>
+        <br/>
+        <label>
+            Seed:
+            <input type="text" name="seed" size="10"/>
+        </label>
+         &nbsp;
+        <label>
+            Timeout (s):
+            <input type="text" name="timeout" size="10" value="5"/>
+        </label>
+         &nbsp;
+        <label>
+            Pause (s):
+            <input type="text" name="delay" size="10" value="0"/>
+        </label>
+        <br/>
+        <br/>
+        <button name="send">Create Game</button>
+
+    </form>
+    {% else %}
+        There is not enough players !
+    {% endif %}
+{%  endblock %}

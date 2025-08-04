@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    <h1>Player logs</h1>
+The following logs are available:
+    <ul class='triple'>
+    {{ players_log|safe }}
+    </ul>
+
+{% endblock %}

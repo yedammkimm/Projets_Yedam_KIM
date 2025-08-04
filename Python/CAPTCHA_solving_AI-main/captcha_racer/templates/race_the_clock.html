@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/styles.css">
+    <title>Timer Challenge - Captcha Racer</title>
+</head>
+<body>
+    <header>
+        <h1>Timer Challenge Mode</h1>
+        <nav>
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="/solo">Solo Mode</a></li>
+                <!-- <li><a href="/multiplayer">Multiplayer</a></li> -->
+                <li><a href="/vs-ai">Versus AI</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <div id="game-area">
+            <h2>Timer Challenge Mode</h2>
+
+            <p>Time Remaining: <span id="timer">{{ session['timer'] }}</span> seconds</p>
+            <p>Score: <span id="score">{{ session['score'] }}</span></p>
+            
+            <div>
+                <img id="captcha-image" src="{{ url_for('captcha_solo') }}" alt="Captcha Image" />
+            </div>
+
+            <form id="captcha-form">
+                <input type="text" name="captcha_input" required placeholder="Enter CAPTCHA" />
+                <button class="button" type="submit">Submit</button>
+            </form>
+            
+            <p id="feedback" style="color: #d8eee0;"></p>
+
+            <!-- Game over popup -->
+            <div id="game-over-popup">
+                <h2>Game Over!</h2>
+                <p>Your final score: <span id="final-score">{{ session['score'] }}</span></p>
+                <button class="button" onclick="restartGame()">Play Again</button>
+            </div>
+        </div>
+        <div id="op-game-area">
+            <h2>Opponent Window</h2>
+
+            <p>Time Remaining: <span id="timer">{{ session['timer'] }}</span> seconds</p>
+            <p>Score: <span id="op-score">{{ session['score'] }}</span></p>
+            
+            <div>
+                <img id="captcha-image" src="{{ url_for('captcha') }}" alt="Captcha Image" />
+            </div>
+
+            <form id="captcha-form">
+                <input type="text" name="captcha_input" required placeholder="Enter CAPTCHA" />
+                <button class="button" type="submit">Submit</button>
+            </form>
+            
+            <p id="feedback" style="color: #d8eee0;"></p>
+
+            <!-- Game over popup -->
+            <div id="game-over-popup">
+                <h2>Game Over!</h2>
+                <p>Your final score: <span id="final-score">{{ session['score'] }}</span></p>
+                <button class="button" onclick="restartGame()">Play Again</button>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Captcha Racer. All rights reserved.</p>
+    </footer>
+
+    <script>
+        let timer = {{ session['timer'] }};
+        const timerElement = document.getElementById('timer');
+        const scoreElement = document.getElementById('score');
+        const captchaImage = document.getElementById('captcha-image');
+        const feedbackElement = document.getElementById('feedback');
+        const gameOverPopup = document.getElementById('game-over-popup');
+        const finalScoreElement = document.getElementById('final-score');
+    
+        // Countdown logic
+        const countdown = setInterval(() => {
+            if (timer > 0) {
+                timer--;
+                timerElement.textContent = timer;
+            } else {
+                clearInterval(countdown);
+                showGameOverPopup();
+            }
+        }, 1000);
+    
+        // AJAX submission for CAPTCHA form
+        document.getElementById('captcha-form').addEventListener('submit', function(event) {
+            event.preventDefault();  // Prevent default form submission
+    
+            // Get user input
+            const formData = new FormData(this);
+    
+            fetch('/verify', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    alert(data.error);
+                    return;
+                }
+    
+                // Update score and feedback
+                feedbackElement.textContent = data.feedback;
+                scoreElement.textContent = data.score;
+    
+                // Update CAPTCHA image
+                captchaImage.src = data.captcha_image;
+
+                // Reset input field after submission
+                document.querySelector('input[name="captcha_input"]').value = ''; // Clear input field
+    
+                // Check if the game is over (for some reason)
+                if (data.game_over) {
+                    clearInterval(countdown);
+                    showGameOverPopup();
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred. Please try again.');
+            });
+        });
+        
+        // Function to show the game over popup
+        function showGameOverPopup() {
+            gameOverPopup.style.display = 'block';
+            // Use the score from the DOM element to display the final score
+            finalScoreElement.textContent = scoreElement.textContent;
+        }
+
+
+        // Function to restart the game
+        function restartGame() {
+            window.location.href = '/solo/timer/start';  // Redirect to start a new game
+        }
+    </script>
+</body>
+</html>

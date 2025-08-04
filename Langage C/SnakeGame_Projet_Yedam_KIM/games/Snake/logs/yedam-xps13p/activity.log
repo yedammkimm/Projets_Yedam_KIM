@@ -1,0 +1,37 @@
+05/02 04:22:34 [root] | 
+05/02 04:22:34 [root] | #=====================================================#
+05/02 04:22:34 [root] | # Coding Game Server is going to start (mode=`prod`) #
+05/02 04:22:34 [root] | #=====================================================#
+05/02 04:22:34 [root] | 
+05/02 04:22:34 [webserver] | Run the web server on port 8080...
+05/02 04:22:34 [root] | Run the game server on port 1234...
+05/02 04:31:44 [Game-d6abd23c802a] | Game d6abd23c802a just starts with 'Zedam' and 'RandomPlayer' (seed=14068690).
+05/02 04:31:45 [Game-d6abd23c802a] | The game 'd6abd23c802a' is now finished, RandomPlayer won against Zedam (Opponent has disconnected)
+05/02 04:32:53 [Game-76d07305d96d] | Game 76d07305d96d just starts with 'Zedam' and 'RandomPlayer' (seed=7786611).
+05/02 04:32:54 [Game-76d07305d96d] | The game '76d07305d96d' is now finished, RandomPlayer won against Zedam (Opponent has disconnected)
+05/02 04:33:23 [Game-9d2191d17fc6] | Game 9d2191d17fc6 just starts with 'Yedam' and 'RandomPlayer' (seed=10297745).
+05/02 04:33:23 [Game-9d2191d17fc6] | The game '9d2191d17fc6' is now finished, RandomPlayer won against Yedam (Opponent has disconnected)
+05/02 04:34:45 [Game-df72840f106b] | Game df72840f106b just starts with 'Yedam' and 'RandomPlayer' (seed=14643844).
+05/02 04:34:45 [Game-df72840f106b] | The game 'df72840f106b' is now finished, RandomPlayer won against Yedam (Opponent has disconnected)
+05/02 04:35:53 [Game-7d21d60316a7] | Game 7d21d60316a7 just starts with 'Yedam' and 'RandomPlayer' (seed=8200662).
+05/02 04:35:53 [Game-7d21d60316a7] | The game '7d21d60316a7' is now finished, RandomPlayer won against Yedam (Opponent has disconnected)
+05/02 04:36:22 [Game-c14af0be40c4] | Game c14af0be40c4 just starts with 'Yedam' and 'RandomPlayer' (seed=12667632).
+05/02 04:36:22 [Game-c14af0be40c4] | The game 'c14af0be40c4' is now finished, RandomPlayer won against Yedam (Opponent has disconnected)
+05/02 04:38:30 [Game-62762a901b46] | Game 62762a901b46 just starts with 'Yedam' and 'RandomPlayer' (seed=6452778).
+05/02 04:38:31 [Game-62762a901b46] | The game '62762a901b46' is now finished, RandomPlayer won against Yedam (Opponent has disconnected)
+05/02 04:39:25 [Game-7d5a04b9dd2f] | Game 7d5a04b9dd2f just starts with 'Yedam' and 'RandomPlayer' (seed=8215044).
+05/02 04:39:25 [Game-7d5a04b9dd2f] | The game '7d5a04b9dd2f' is now finished, RandomPlayer won against Yedam (Opponent has disconnected)
+05/02 04:40:06 [Game-923812502228] | Game 923812502228 just starts with 'Yedam' and 'RandomPlayer' (seed=9582610).
+05/02 04:40:07 [Game-923812502228] | The game '923812502228' is now finished, RandomPlayer won against Yedam (Opponent has disconnected)
+05/02 04:40:26 [Game-c67e2a0a42a1] | Game c67e2a0a42a1 just starts with 'Yedam' and 'RandomPlayer' (seed=13008426).
+05/02 04:40:26 [Game-c67e2a0a42a1] | The game 'c67e2a0a42a1' is now finished, RandomPlayer won against Yedam (Opponent has disconnected)
+05/02 04:43:19 [Game-bbde04a2d6d9] | Game bbde04a2d6d9 just starts with 'Yedam' and 'RandomPlayer' (seed=12312068).
+05/02 04:43:19 [Game-bbde04a2d6d9] | The game 'bbde04a2d6d9' is now finished, RandomPlayer won against Yedam (Opponent has disconnected)
+05/02 04:45:43 [Game-7bf7b7ac2440] | Game 7bf7b7ac2440 just starts with 'Yedam' and 'RandomPlayer' (seed=8124343).
+05/02 04:45:43 [Game-7bf7b7ac2440] | The game '7bf7b7ac2440' is now finished, RandomPlayer won against Yedam (Opponent has disconnected)
+05/02 04:49:35 [Game-56c6c8da68f3] | Game 56c6c8da68f3 just starts with 'Yedam' and 'RandomPlayer' (seed=5686984).
+05/02 04:49:35 [Game-56c6c8da68f3] | The game '56c6c8da68f3' is now finished, RandomPlayer won against Yedam (Opponent has disconnected)
+05/02 04:51:37 [Game-6c0dd0d416bc] | Game 6c0dd0d416bc just starts with 'Yedam' and 'RandomPlayer' (seed=7081424).
+05/02 04:51:38 [Game-6c0dd0d416bc] | The game '6c0dd0d416bc' is now finished, RandomPlayer won against Yedam (Opponent has disconnected)
+05/02 04:55:30 [Game-74d4cdeff40f] | Game 74d4cdeff40f just starts with 'Yedam' and 'RandomPlayer' (seed=7656653).
+05/02 04:55:30 [Game-74d4cdeff40f] | The game '74d4cdeff40f' is now finished, RandomPlayer won against Yedam (Opponent has disconnected)

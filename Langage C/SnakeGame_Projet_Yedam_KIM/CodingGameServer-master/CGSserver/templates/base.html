@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
+    <link rel='stylesheet' href='{{base_url}}style.css' type='text/css'/>
+    <title>{{GameName}} Web Interface</title>
+    <!-- load socket io library -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/3.1.0/socket.io.min.js" integrity="sha512-ZqQWGugamKhlSUqM1d/HMtwNG+hITmd/ptoof91lt5ojFZ+2bKlkvlzkmnDIrnikDY+UDVZVupLf6MNbuhtFSw==" crossorigin="anonymous"></script>
+    <!-- load script for menu -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+    <script>
+        $(function() {
+            if ($.browser.msie && $.browser.version.substr(0,1)<7)
+            {
+            $('li').has('ul').mouseover(function(){
+                $(this).children('ul').css('visibility','visible');
+                }).mouseout(function(){
+                $(this).children('ul').css('visibility','hidden');
+                })
+            }
+
+            /* Mobile */
+            $('#menu-wrap').prepend('<div id="menu-trigger">Menu</div>');
+            $("#menu-trigger").on("click", function(){
+                $("#menu").slideToggle();
+            });
+
+            // iPad
+            var isiPad = navigator.userAgent.match(/iPad/i) != null;
+            if (isiPad) $('#menu ul').addClass('no-transition');
+        });
+    </script>
+
+    <!-- block `style` -->
+    {% block style %}{% endblock %}
+</head>
+<body>
+
+<!-- banner -->
+
+
+<!-- menu -->
+<nav id="menu-wrap">
+<ul id="menu">
+    <li><a href="{{base_url}}index.html">Home</a></li>
+    <li><a href="{{base_url}}players.html">Players</a></li>
+    <li>
+        <a href="{{base_url}}games.html">Games</a>
+        <ul>
+            <li><a href="{{base_url}}new_game.html">New game</a></li>
+        </ul>
+    </li>
+    <li><a href="{{base_url}}tournaments.html">Tournaments</a>
+        <ul>
+            <li><a href="{{base_url}}new_tournament.html">New tournament</a></li>
+        </ul>
+
+    </li>
+    <li><a href="{{base_url}}log.html">Logs</a>
+        <ul>
+            <li><a href="{{base_url}}logs/players.html">Players</a></li>
+            <li><a href="{{base_url}}logs/games.html">Games</a></li>
+            <li><a href="#">Tournament</a></li>
+        </ul>
+    </li>
+</ul>
+</nav>
+
+<!-- content -->
+<div id="content">
+    {% block content%}{% endblock%}
+
+    {% block script %}{% endblock %}
+</div>
+
+<!-- footer -->
+<div id="footer">
+<br/><br/><hr/>
+    <p>(c) 2019 -- Coding Game Server</p>
+</div>
+
+</body>
+</html>

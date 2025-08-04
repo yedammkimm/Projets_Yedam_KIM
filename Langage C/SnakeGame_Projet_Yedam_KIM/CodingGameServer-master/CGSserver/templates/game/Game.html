@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% from "game/macroGame.html" import socketGame, styleGame, contentGame %}
+
+{% block script %}
+{{ socketGame('game_') }}
+<script type="text/javascript">
+    const socket = io();
+    /* at connection, register to get update about theses classes */
+    socket.on('connect', function () {
+        socket.emit('registerObject', ["{{GameName}}", "{{gameName}}"]);
+    });
+    /* register about end of the game */
+    displayEndOfGame();
+    /* register about update */
+    updateWebSocket();
+</script>
+
+{% endblock %}
+
+    {% block style %}
+        {{ styleGame() }}
+    {% endblock %}
+
+{% block content %}
+    <h1>Game {{ gameName }}: {{ player1|safe }} Vs {{ player2|safe }} </h1>
+    <span id="endOfGame"></span>
+    <br/>
+    (<a href="{{ baseurl }}/../logs/game/{{ gameName }}">log file</a>)
+    <br/>
+
+    {{ contentGame() }}
+
+{% endblock %}

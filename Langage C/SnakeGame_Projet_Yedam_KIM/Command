@@ -1,0 +1,1 @@
+runCGS Snake -p 1234 -w 8080  --no-email

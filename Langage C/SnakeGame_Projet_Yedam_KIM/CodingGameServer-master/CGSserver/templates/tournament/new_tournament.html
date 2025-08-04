@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+
+{% block script %}
+<script type="text/javascript">
+    function updateModeForm()
+    {
+        {{ JavascriptModeOptions|safe }}
+        let mode = document.getElementsByName('mode')[0].value;
+         document.getElementById(mode).style.display="block";
+    }
+    window.onload = updateModeForm;
+</script>
+{% endblock %}
+
+
+{% block content %}
+<form action="{{base_url}}create_new_tournament.html" method="POST">
+    <label>
+        Name:
+        <input name="name" type="text" required/>
+    </label>
+    <br/>
+    <label>
+        Nb max players (0 for no limit):
+        <input name="nbMaxPlayers" type="number" value="0"/>
+    </label>
+    <br/>
+    max rounds for a victory:
+    <label>
+        <select name="nbRounds4Victory">
+            <option value="1">1 (who starts is random)</option>
+            <option value="2">2 (both starts)</option>
+            <option value="3" selected>3</option>
+            <option value="5">5</option>
+        </select>
+    </label>
+
+    <fieldset>
+        <legend>Tournament mode</legend>
+        <label>
+        Mode: <select name='mode' onchange='updateModeForm();'>{{ HTMLmodes|safe }}</select>
+        </label>
+        {{ HTMLmodeOptions|safe }}
+    </fieldset>
+
+    <button name="send">Create Tournament</button>
+
+</form>
+{% endblock %}

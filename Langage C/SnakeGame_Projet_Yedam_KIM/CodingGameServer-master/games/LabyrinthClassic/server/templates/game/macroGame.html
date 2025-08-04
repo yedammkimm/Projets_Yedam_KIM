@@ -1,0 +1,38 @@
+{% macro socketGame(prefix) %}
+<script type="text/javascript">
+    {% include "game/maze.js" %}
+    {% include "game/updateGame.js" %}
+
+</script>
+{% endmacro %}
+
+{% macro styleGame() %}
+<style>
+#comments {
+    border-color: #a9a9a9;
+}
+#comments::before{
+    content: "Comments: ";
+    display: block;
+    font-weight: bold;
+    font-style: italic;
+}
+</style>
+{% endmacro %}
+
+{% macro contentGame() %}
+<div id="game_content" style="padding: 5px 0">
+    <div id="maze_content">
+        <div>
+            <h2 style="text-align: left;">Extra tile:</h2>
+            <canvas id="extra_tile" width="64" height="64"></canvas>
+        </div>
+        <canvas id="maze"></canvas>
+        <canvas id="temp" width="64" height="64" style="display: none;"></canvas>
+    </div>
+    <div id="comments" class="game-info-frame"></div>
+</div>
+
+
+
+{% endmacro %}

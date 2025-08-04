@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% from "game/macroGame.html" import socketGame, styleGame, contentGame %}
+
+{% block script %}
+{{ socketGame('game_') }}
+<script type="text/javascript">
+    const socket = io();
+    let lastGame = '';  /* name of the previous game */
+    /* at connection, register to get update about theses classes */
+    socket.on('connect', function(){
+        socket.emit('registerObject', ['RegularPlayer','{{ playerName }}']);
+    });
+     /* when received update about a Player, just display it */
+    socket.on('updateRegularPlayer', function(msg) {
+       var data = JSON.parse(msg);
+        if (data.hasOwnProperty('currentGame'))
+        {
+            if (data['currentGame'] != lastGame)
+            {
+                lastGame = data['currentGame'];
+                if (data['currentGame'] != '') {
+                    document.getElementById('endOfGame').innerHTML = "";
+                    document.getElementById('game').style.visibility='visible';
+                    player1 = data['player1'];
+                    player2 = data['player2'];
+                    document.getElementById('gameheader').innerHTML =
+                        'Game ' + data['currentGame'] + ' : ' + player1 + ' vs ' + player2;
+                    /* unregister the previous game */
+                    socket.off('update{{ GameName }}');
+                    /* register to the game */
+                    socket.emit('registerObject', ["{{GameName}}", lastGame]);
+                    displayEndOfGame();
+                    updateWebSocket();
+                }
+                else {
+                    document.getElementById('gameheader').innerHTML = 'Not playing...';
+                    //document.getElementById('game').style.visibility='hidden';
+                }
+            }
+        }
+    });
+
+</script>
+{% endblock %}
+
+
+{% block style %}
+    {{ styleGame() }}
+{% endblock %}
+
+
+{% block content %}
+    <h1>Page of player {{ playerName }} </h1>
+
+    <h2 id="gameheader">Not playing...</h2>
+    <div id="game" style="visibility: hidden;">
+        <span id="endOfGame"></span>
+        <br/>
+        (<a href="{{ baseurl }}/../logs/game/{{ gameName }}">log file</a>)
+        <br/>
+        {{ contentGame() }}
+    </div>
+<br/>
+
+{% endblock %}

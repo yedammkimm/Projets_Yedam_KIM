@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Logement éco-responsable</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            min-height: 100vh;
+            padding-bottom: 60px; 
+        }
+        .navbar-custom {
+            background-color: #28a745;
+        }
+        .navbar-custom .navbar-brand, .navbar-custom .nav-link {
+            color: #ffffff;
+        }
+        footer {
+            background-color: #343a40;
+            color: #ffffff;
+            padding: 20px 0;
+            position: relative; 
+            width: 100%;
+            margin-top: 20px; 
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-custom">
+        <a class="navbar-brand" href="#">Logement Éco-Responsable</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Accueil</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#consommation">Consommation</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#economies">Économies Réalisées</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#capteurs">Capteurs/Actionneurs</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#ajout_capteurs">Ajout des Capteurs/Actionneurs</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#configuration">Configuration</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#seuils">Seuils de Consommation et Alertes</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#securite">Sécurité des Pièces</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#house_overview">Vue d'ensemble</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <!-- Accueil -->
+    <section id="accueil" class="container mt-5">
+        <div class="jumbotron text-center">
+            <h1>Bienvenue au Logement Éco-Responsable de Yedam KIM</h1>
+            <p>Ce projet a pour but de vous aider à gérer votre consommation énergétique, vos capteurs, et vos économies de manière efficace et écologique.</p>
+            <p>Le Logement Éco-Responsable vous permet de :</p>
+            <ul class="list-unstyled">
+                <li>⚡ Suivre et optimiser votre consommation d'énergie.</li>
+                <li>💧 Gérer l'utilisation de vos ressources telles que l'eau et l'électricité.</li>
+                <li>🔒 Assurer la sécurité de vos différentes pièces.</li>
+                <li>📊 Visualiser vos économies réalisées grâce à des analyses détaillées.</li>
+            </ul>
+            <p>Explorez les différentes sections pour en savoir plus et commencer votre voyage vers un habitat plus durable !</p>
+            <p>Yedam KIM TP3 IOT</p>
+        </div>
+    </section>
+
+    <!-- Consommation -->
+    <section id="consommation" class="container mt-5">
+        <h2>Consommation</h2>
+        <div id="consommation_chart" style="width: 100%; height: 400px;"></div>
+    </section>
+
+    <!-- Economies Réalisées -->
+    <section id="economies" class="container mt-5">
+        <h2>Économies Réalisées</h2>
+        <div class="btn-group mb-3" role="group" aria-label="Type Factures">
+            <button type="button" name="type_fac" value="Eau" class="btn btn-primary" onclick="filterEconomies('Eau')">Eau</button>
+            <button type="button" name="type_fac" value="Électricité" class="btn btn-primary" onclick="filterEconomies('Électricité')">Électricité</button>
+            <button type="button" name="type_fac" value="Gaz" class="btn btn-primary" onclick="filterEconomies('Gaz')">Gaz</button>
+            <button type="button" name="type_fac" value="Déchets" class="btn btn-primary" onclick="filterEconomies('Déchets')">Déchets</button>
+            <button type="button" name="type_fac" value="Total" class="btn btn-primary" onclick="filterEconomies('')">Total</button>
+        </div>
+        <div id="economies_chart" style="width: 100%; height: 400px;"></div>
+    </section>
+
+    <!-- Capteurs/Actionneurs -->
+    <section id="capteurs" class="container mt-5">
+        <h2>Capteurs et Actionneurs</h2>
+        <div class="row">
+            <!-- Capteur de Température -->
+            <div class="col-md-6 mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Capteur de Température</h5>
+                        <p class="card-text">État : <span>{{ capteur_states['capteur_temp'] }}</span></p>
+                        <form method="POST" action="/toggle_capteur">
+                            <input type="hidden" name="capteur_id" value="capteur_temp">
+                            <button type="submit" class="btn {{ 'btn-success' if capteur_states['capteur_temp'] == 'Actif' else 'btn-danger' }}">
+                                {{ 'Désactiver' if capteur_states['capteur_temp'] == 'Actif' else 'Activer' }}
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Capteur d'Humidité -->
+            <div class="col-md-6 mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Capteur d'Humidité</h5>
+                        <p class="card-text">État : <span>{{ capteur_states['capteur_humidite'] }}</span></p>
+                        <form method="POST" action="/toggle_capteur">
+                            <input type="hidden" name="capteur_id" value="capteur_humidite">
+                            <button type="submit" class="btn {{ 'btn-success' if capteur_states['capteur_humidite'] == 'Actif' else 'btn-danger' }}">
+                                {{ 'Désactiver' if capteur_states['capteur_humidite'] == 'Actif' else 'Activer' }}
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Capteur de Lumière -->
+            <div class="col-md-6 mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Capteur de Lumière</h5>
+                        <p class="card-text">État : <span>{{ capteur_states['capteur_lumiere'] }}</span></p>
+                        <form method="POST" action="/toggle_capteur">
+                            <input type="hidden" name="capteur_id" value="capteur_lumiere">
+                            <button type="submit" class="btn {{ 'btn-success' if capteur_states['capteur_lumiere'] == 'Actif' else 'btn-danger' }}">
+                                {{ 'Désactiver' if capteur_states['capteur_lumiere'] == 'Actif' else 'Activer' }}
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Capteur de Gaz -->
+            <div class="col-md-6 mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Capteur de Gaz</h5>
+                        <p class="card-text">État : <span>{{ capteur_states['capteur_gaz'] }}</span></p>
+                        <form method="POST" action="/toggle_capteur">
+                            <input type="hidden" name="capteur_id" value="capteur_gaz">
+                            <button type="submit" class="btn {{ 'btn-success' if capteur_states['capteur_gaz'] == 'Actif' else 'btn-danger' }}">
+                                {{ 'Désactiver' if capteur_states['capteur_gaz'] == 'Actif' else 'Activer' }}
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Actionneur Lumière -->
+            <div class="col-md-6 mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Actionneur Lumière</h5>
+                        <p class="card-text">État : <span>{{ capteur_states['actionneur_lumiere'] }}</span></p>
+                        <form method="POST" action="/toggle_capteur">
+                            <input type="hidden" name="capteur_id" value="actionneur_lumiere">
+                            <button type="submit" class="btn {{ 'btn-success' if capteur_states['actionneur_lumiere'] == 'Actif' else 'btn-danger' }}">
+                                {{ 'Désactiver' if capteur_states['actionneur_lumiere'] == 'Actif' else 'Activer' }}
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Ajout de Capteurs/Actionneurs -->
+    <section id="ajout_capteurs" class="container mt-5">
+        <h4>Ajout de Capteurs/Actionneurs</h4>
+        <form method="POST" action="/manage_devices" class="mb-5">
+            <div class="form-group">
+                <label for="deviceType">Type de Capteur/Actionneur</label>
+                <select class="form-control" name="deviceType" id="deviceType">
+                    <option>Capteur de Température</option>
+                    <option>Capteur d'Humidité</option>
+                    <option>Capteur de Lumière</option>
+                    <option>Capteur de Gaz</option>
+                    <option>Actionneur Lumière</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="roomSelect">Pièce</label>
+                <select class="form-control" name="roomSelect" id="roomSelect">
+                    {% for room in rooms %}
+                    <option value="{{ room['piece_id'] }}">{{ room['nom'] }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <button type="submit" class="btn btn-success">Ajouter/Associer le Capteur/Actionneur</button>
+        </form>
+    </section>
+
+        <!-- Configuration -->
+        <section id="configuration" class="container mt-5">
+            <h2>Configuration du Logement Éco-Responsable</h2>
+        <!-- Manage Rooms -->
+            <section id="seuils" class="container mt-5">
+            <form method="POST" action="/manage_rooms" class="mb-5" id="manageRoomsForm">
+                <h4>Gestion des Pièces</h4>
+                <div class="form-group">
+                    <label for="roomAction">Action</label>
+                    <select class="form-control" name="roomAction" id="roomAction" onchange="toggleFields()">
+                        <option value="add">Ajouter</option>
+                        <option value="edit">Modifier</option>
+                        <option value="delete">Supprimer</option>
+                    </select>
+                </div>
+                <div class="form-group" id="addOrEditName">
+                    <label for="roomName">Nom de la Pièce</label>
+                    <input type="text" class="form-control" name="roomName" id="roomName" placeholder="Entrer le nom de la pièce (e.g., Salon, Cuisine)" required>
+                </div>
+                <div class="form-group" id="selectRoomName" style="display: none;">
+                    <label for="existingRoomName">Sélectionner une Pièce</label>
+                    <select class="form-control" name="existingRoomName" id="existingRoomName">
+                        {% for room in rooms %}
+                            <option value="{{ room['piece_id'] }}">{{ room['nom'] }}</option>
+                        {% endfor %}
+                    </select>
+                </div>        
+                <div id="coordinateFields" class="form-group" style="display: none;">
+                    <label for="coord_x">Coordonnée X</label>
+                    <input type="number" class="form-control" name="coord_x" id="coord_x" placeholder="Coordonnée X" required>
+                    
+                    <label for="coord_y">Coordonnée Y</label>
+                    <input type="number" class="form-control" name="coord_y" id="coord_y" placeholder="Coordonnée Y" required>
+                    
+                    <label for="coord_z">Coordonnée Z (Étage)</label>
+                    <input type="number" class="form-control" name="coord_z" id="coord_z" placeholder="Coordonnée Z (Étage)">
+                </div>
+                <input type="hidden" name="_method" id="formMethod" value="POST">
+                <button type="button" class="btn btn-primary" onclick="submitForm()">Enregistrer la Gestion des Pièces</button>
+            </form>
+        </section>
+    
+        <script>
+            function toggleFields() {
+                const action = document.getElementById("roomAction").value;
+                const addOrEditName = document.getElementById("addOrEditName");
+                const selectRoomName = document.getElementById("selectRoomName");
+                const coordinateFields = document.getElementById("coordinateFields");
+                console.log(`Action choisie: ${action}`);
+                
+                if (action === "add") {
+                    addOrEditName.style.display = "block";
+                    selectRoomName.style.display = "none";
+                    coordinateFields.style.display = "block";
+                } else if (action === "edit") {
+                    addOrEditName.style.display = "none";
+                    selectRoomName.style.display = "block";
+                    coordinateFields.style.display = "block";
+                } else if (action === "delete") {
+                    addOrEditName.style.display = "none";
+                    selectRoomName.style.display = "block";
+                    coordinateFields.style.display = "none";
+                }
+            }
+    
+            function submitForm() {
+                const action = document.getElementById("roomAction").value;
+                const formMethod = document.getElementById("formMethod");
+                const form = document.getElementById("manageRoomsForm");
+    
+                // Set the form method based on the action
+                if (action === "add") {
+                    formMethod.value = "POST";
+                    form.method = "POST";
+                } else if (action === "edit") {
+                    formMethod.value = "PUT";
+                    form.method = "POST";  // Still POST to allow Flask to understand PUT via method override
+                } else if (action === "delete") {
+                    formMethod.value = "DELETE";
+                    form.method = "POST";  // Still POST to allow Flask to understand DELETE via method override
+                }
+    
+                // Submit the form
+                form.submit();
+            }
+    
+            document.addEventListener("DOMContentLoaded", function() {
+                toggleFields();
+            });
+        </script>  
+
+    <!-- Seuils de Consommation et Alertes -->
+    <section id="seuils" class="container mt-5">
+        <h4>Seuils de Consommation et Alertes</h4>
+        <form method="POST" action="/set_thresholds" class="mb-5">
+            <div class="form-group">
+                <label for="electricityThreshold">Seuil de Consommation Électrique (kWh)</label>
+                <input type="number" class="form-control" name="electricityThreshold" id="electricityThreshold" placeholder="Définir un seuil de consommation électrique">
+            </div>
+            <div class="form-group">
+                <label for="waterThreshold">Seuil de Consommation d'Eau (Litres)</label>
+                <input type="number" class="form-control" name="waterThreshold" id="waterThreshold" placeholder="Définir un seuil de consommation d'eau">
+            </div>
+            <button type="submit" class="btn btn-warning">Enregistrer les Seuils de Consommation</button>
+        </form>
+    </section>
+
+    <!-- Sécurité des Pièces -->
+    <section id="securite" class="container mt-5">
+        <h4>Sécurité des Pièces</h4>
+        <form method="POST" action="/manage_security" class="mb-5">
+            <div class="form-group">
+                <label for="securityRoomSelect">Pièce</label>
+                <select class="form-control" name="securityRoomSelect" id="securityRoomSelect">
+                    {% for room in rooms %}
+                    <option value="{{ room['piece_id'] }}">{{ room['nom'] }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="lockState">Verrouiller/Déverrouiller</label>
+                <select class="form-control" name="lockState" id="lockState">
+                    <option value="lock">Verrouiller</option>
+                    <option value="unlock">Déverrouiller</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-danger">Enregistrer la Sécurité de la Pièce</button>
+        </form>
+    </section>
+
+    <!-- Vue d'ensemble de la maison -->
+    <section id="house_overview" class="container mt-5">
+        <h2>Vue d'ensemble de la maison</h2>
+        <div class="house-plan">
+            {% for level in rooms | groupby('coord_z') %}
+            <h3>Étage: {{ level.grouper }}</h3>
+            <svg width="1000" height="800" xmlns="http://www.w3.org/2000/svg" style="border: 1px solid #000; margin-bottom: 30px;">
+                {% for room in level.list %}
+                {% if room['coord_x'] is not none and room['coord_y'] is not none %}
+                <rect x="{{ room['coord_x'] }}" y="{{ room['coord_y'] }}" width="200" height="150" fill="#87cefa" />
+                <text x="{{ room['coord_x'] + 10 }}" y="{{ room['coord_y'] + 20 }}" font-size="14" font-family="Arial">{{ room['nom'] }}</text>
+                <circle cx="{{ room['coord_x'] + 30 }}" cy="{{ room['coord_y'] + 50 }}" r="15" fill="orange" />
+                <text x="{{ room['coord_x'] + 50 }}" y="{{ room['coord_y'] + 55 }}" font-size="12" font-family="Arial">
+                    {{ room['capteurs'] }} capteurs
+                </text>
+                {% endif %}
+                {% endfor %}
+            </svg>
+            {% endfor %}
+        </div>
+    </section>
+
+    <script>
+        google.charts.load('current', {'packages':['corechart']});
+        google.charts.setOnLoadCallback(drawCharts);
+
+        function drawCharts() {
+            // Récupérer les données du serveur Flask
+            $.getJSON('http://127.0.0.1:5000/factures_p3', function(factures) {
+                if (factures.length === 0) {
+                    console.error("Aucune donnée disponible pour les factures.");
+                    return;
+                }
+                // Préparer les données pour le graphique de consommation
+                var data1 = [['Type', 'Montant']];
+                factures.forEach(function(facture) {
+                    data1.push([facture.type_fac, facture.montant_total]);
+                });
+
+                var options1 = {
+                    title: 'Consommation du Logement',
+                    is3D: true
+                };
+
+                var chart1 = new google.visualization.PieChart(document.getElementById('consommation_chart'));
+                chart1.draw(google.visualization.arrayToDataTable(data1), options1);
+            }).fail(function() {
+                console.error("Impossible de récupérer les données des factures.");
+            });
+
+            // Récupérer les données pour les économies réalisées
+            $.getJSON('http://127.0.0.1:5000/economies', function(response) {
+                if (!response.data || response.data.length === 0) {
+                    console.error("Aucune donnée disponible pour les économies.");
+                    return;
+                }
+
+                const months = response.months;
+                const data = response.data;
+
+                // Prepare Google Charts data
+                const chartData = new google.visualization.DataTable();
+                chartData.addColumn('string', 'Mois');
+                data.forEach(entry => chartData.addColumn('number', entry.type_fac));
+
+                months.forEach((month, i) => {
+                    const row = [month];
+                    data.forEach(entry => row.push(entry.montants[i] || 0));
+                    chartData.addRow(row);
+                });
+
+                const options = {
+                    title: 'Évolution des Montants par Type de Facture',
+                    hAxis: { title: 'Mois' },
+                    vAxis: { title: 'Montant (EUR)' },
+                    legend: { position: 'top' },
+                };
+
+                const chart = new google.visualization.LineChart(document.getElementById('economies_chart'));
+                chart.draw(chartData, options);
+            }).fail(function() {
+                console.error("Impossible de récupérer les données des économies.");
+            });
+        }
+    </script>
+</body>
+</html>
